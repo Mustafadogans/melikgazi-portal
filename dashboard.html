@@ -1,0 +1,1944 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Melikgazi Belediyesi Portal</title>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@600&family=Lato:wght@400;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
+    <style>
+        body {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            letter-spacing: -0.01em;
+            background-color: #f5f7fa;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.8125rem;
+            color: #333;
+        }
+
+        /* Navbar & Sidebar */
+        .navbar-custom {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background-color: #fff;
+            height: 64px;
+            border-bottom: 1px solid #e0e0e0;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+        }
+
+        .search-container {
+            margin-left: 50px;
+            flex-grow: 1;
+        }
+
+        .search-input {
+            background-color: #e9e9e9;
+            border: none;
+            border-radius: 20px;
+            padding: 5px 15px;
+            width: 250px;
+            outline: none;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .user-info img {
+            width: 50px;
+        }
+
+        /* Hamburger Menu CSS */
+        .menu-toggle {
+            display: none;
+        }
+
+        .hamburger {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 24px;
+            height: 18px;
+            cursor: pointer;
+            z-index: 10001;
+            position: relative;
+        }
+
+        .hamburger span {
+            display: block;
+            height: 2px;
+            width: 100%;
+            background-color: #333;
+            transition: all 0.3s ease;
+        }
+
+        .menu-toggle:checked ~ .hamburger span:nth-child(1) {
+            transform: translateY(8px) rotate(45deg);
+        }
+
+        .menu-toggle:checked ~ .hamburger span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .menu-toggle:checked ~ .hamburger span:nth-child(3) {
+            transform: translateY(-8px) rotate(-45deg);
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 300px;
+            height: 100vh;
+            background-color: #fff;
+            z-index: 10002;
+            transition: left 0.3s ease;
+            padding-top: 15px;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            overflow-y: auto;
+        }
+
+        .menu-toggle:checked ~ .hamburger {
+            display: none;
+        }
+
+        .menu-toggle:checked ~ .sidebar {
+            left: 0;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0,0,0,0.7);
+            z-index: 9998;
+            display: none;
+        }
+
+        .menu-toggle:checked ~ .overlay {
+            display: block;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 12px 24px;
+            color: #333;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .sidebar a i {
+            width: 25px;
+            margin-right: 10px;
+            text-align: center;
+        }
+
+        .sidebar a:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .sidebar hr {
+            margin: 10px 0;
+        }
+
+        /* Layout & Modules */
+        .spacer {
+            height: 80px;
+        }
+
+        .alan {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 0 10px 10px;
+            margin-bottom: 20px;
+        }
+
+        .modul {
+            font-weight: bold;
+            font-size: 14px;
+            padding: 15px 5px;
+            color: #333;
+            text-transform: uppercase;
+            border-bottom: 1px solid #f0f0f0;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modul-title-left {
+            display: flex;
+            align-items: center;
+        }
+        
+        .modul-title-left i {
+            margin-right: 8px;
+        }
+
+        .module-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        
+        .module-list {
+            margin-left: -5px;
+            margin-right: -5px;
+        }
+        .module-list > li {
+            padding-left: 5px;
+            padding-right: 5px;
+            margin-bottom: 10px;
+        }
+        .module-card {
+            text-align: center;
+            position: relative;
+            cursor: pointer;
+            border: 1px solid #e6e6e6;
+            border-radius: 6px;
+            padding: 20px 5px 10px 5px;
+            background-color: #fff;
+            height: 130px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            transition: box-shadow 0.2s;
+        }
+        .module-card:hover {
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        }
+
+        .module-card .img-container {
+            height: 45px;
+            width: 100%;
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            margin-bottom: 15px;
+            border: none;
+        }
+
+        .module-card strong {
+            display: block;
+            font-size: 11px;
+            color: #777;
+            font-weight: 600;
+            line-height: 1.3;
+            text-transform: uppercase;
+        }
+
+        .star-btn {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            color: #e39a26;
+            background: transparent;
+            padding: 3px;
+            font-size: 14px;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        
+        .broken-icon-container {
+            height: 45px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            font-size: 40px;
+            color: #4ab4d0;
+            border: none;
+        }
+    
+        /* Toggle Switch */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 40px;
+            height: 20px;
+        }
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 20px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: #5567ff;
+        }
+        input:checked + .slider:before {
+            transform: translateX(20px);
+        }
+        
+        .collapsible-content {
+            display: block;
+        }
+        input:not(:checked) ~ .collapsible-content {
+            display: none;
+        }
+
+        /* Agenda & Lists */
+        .agenda-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .btn-primary-dodger-blue {
+            background-color: #5567ff;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        
+        .btn-primary-dodger-blue:hover {
+            color: #fff;
+            background-color: #4456ea;
+        }
+
+        .btn-warning-orange {
+            background-color: #e39a26;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        
+        .btn-warning-orange:hover {
+            color: #fff;
+            background-color: #d18815;
+        }
+
+        /* FullCalendar Customization */
+        .fc-theme-standard .fc-scrollgrid {
+            border: none;
+        }
+        .fc-daygrid-day-number {
+            font-size: 12px;
+            text-decoration: none;
+            color: #333;
+        }
+        .fc .fc-daygrid-day.fc-day-today {
+            background-color: transparent;
+        }
+        .fc .fc-daygrid-day.fc-day-today .fc-daygrid-day-number {
+            background-color: #5567ff;
+            color: #fff;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin: 2px;
+        }
+        .fc-col-header-cell {
+            border: none !important;
+            padding: 5px 0;
+        }
+        .fc-daygrid-day {
+            border: 1px solid #f0f0f0 !important;
+        }
+        
+        .event-list {
+            margin-top: 15px;
+        }
+        .event-item {
+            background-color: #f8f9fa;
+            border-left: 4px solid #5567ff;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 0 4px 4px 0;
+        }
+        .badge-primary {
+            background-color: #5567ff;
+        }
+        
+        /* List section */
+        .list-card {
+            border: 2px solid #e39a26;
+            border-radius: 5px;
+            padding: 15px;
+            background-color: #fff;
+        }
+        .list-card h6 {
+            font-size: 13px;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        .list-card ul {
+            padding-left: 20px;
+            margin-bottom: 15px;
+        }
+        .list-card li {
+            font-size: 11px;
+            color: #666;
+            margin-bottom: 4px;
+        }
+        .date-badge {
+            background-color: #e39a26;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            display: inline-block;
+        }
+
+        /* FAB */
+        .fab {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            background-color: #ef5350;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            cursor: pointer;
+            z-index: 9999;
+        }
+        .fab:hover {
+            color: white;
+            background-color: #e53935;
+        }
+
+        /* Modal */
+        .modal-module-img {
+            max-width: 150px;
+            margin: 0 auto 15px;
+            display: block;
+        }
+        .btn-module-link {
+            background-color: #5567ff;
+            color: white;
+            width: 100%;
+            border-radius: 20px;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+        .btn-module-link:hover {
+            color: white;
+            background-color: #4456ea;
+        }
+        .resim-link {
+            color: #5567ff;
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            margin: 15px 0;
+        }
+        .resim-link:hover {
+            text-decoration: underline;
+            color: #5567ff;
+        }
+    
+
+        /* Premium Calendar Hover Effects */
+        .fc-daygrid-day-frame {
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+            border-radius: 8px;
+            margin: 2px; /* slightly separate cells to allow scaling room */
+            height: 60px !important;
+            min-height: 60px !important;
+            position: relative;
+        }
+        
+        .fc-daygrid-day {
+            border: none !important; /* Remove harsh table borders for a cleaner look */
+            position: relative;
+        }
+
+        .fc-theme-standard td, .fc-theme-standard th {
+            border-color: #f0f0f0 !important; /* Soften inner borders if kept */
+        }
+        
+        /* The Hover Action */
+        .fc-daygrid-day:hover .fc-daygrid-day-frame {
+            transform: scale(1.15);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+            background-color: #fff;
+            z-index: 20;
+            border: 1px solid #e0e0e0;
+        }
+        
+        
+        
+        /* Remove FullCalendar's default dark blue circle for today if any */
+        .fc-daygrid-day-number, .fc-day-today .fc-daygrid-day-number {
+            background-color: transparent !important;
+            border-radius: 0 !important;
+            padding: 4px !important;
+        }
+
+        /* Admin Event Background (Importance 6) */
+        .fc-day-importance-6 .fc-daygrid-day-frame { background-color: #e6f0ff !important; }
+
+        /* Today Highlight */
+        .fc-day-today .fc-daygrid-day-frame {
+            background-color: #e6f2ff !important;
+            border: 1px solid #b3d7ff !important;
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 123, 255, 0.15);
+            z-index: 5;
+            position: relative;
+        }
+        .fc-day-today .date-month {
+            color: #0056b3 !important;
+        }
+
+        /* Remove underline from dates */
+        .fc-daygrid-day-number {
+            text-decoration: none !important;
+            color: #333 !important;
+        }
+        .fc-daygrid-day-number:hover {
+            text-decoration: none !important;
+            color: #5567ff !important; /* Nice blue tint on text hover */
+        }
+        
+        /* Adjust importance background colors */
+        .fc-day-importance-5 .fc-daygrid-day-frame { background-color: #ffe5e5 !important; } /* Açık Kırmızı */
+        .fc-day-importance-4 .fc-daygrid-day-frame { background-color: #ffeedb !important; } /* Açık Turuncu */
+        .fc-day-importance-3 .fc-daygrid-day-frame { background-color: #fff9db !important; } /* Açık Sarı */
+        .fc-day-importance-2 .fc-daygrid-day-frame { background-color: #f3e8ff !important; } /* Açık Mor */
+        .fc-day-importance-1 .fc-daygrid-day-frame { background-color: #e3f9e5 !important; } /* Açık Yeşil */
+
+
+    
+        /* Static Calendar Styles */
+        .fc-daygrid-day-events {
+            display: none !important;
+        }
+        .fc-daygrid-day-top {
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            height: 100% !important;
+            flex-direction: column !important;
+        }
+        .fc-daygrid-day-number {
+            font-size: 16px !important;
+            font-weight: bold !important;
+        }
+        .fc-daygrid-day-frame {
+            height: 60px !important;
+            min-height: 60px !important;
+        }
+
+    
+        .custom-light-tooltip .tooltip-inner {
+            background-color: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(10px) !important;
+            -webkit-backdrop-filter: blur(10px) !important;
+            border-radius: 12px !important;
+            padding: 10px 16px !important;
+            font-weight: 600 !important;
+            font-size: 13px !important;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15) !important;
+            border: 1px solid rgba(0,0,0,0.08) !important;
+            color: #2d3748 !important;
+            letter-spacing: 0.3px !important;
+            text-align: left !important;
+            line-height: 1.5 !important;
+            max-width: 300px !important;
+        }
+        .custom-light-tooltip.show {
+            opacity: 1 !important;
+        }
+        .custom-light-tooltip .arrow {
+            display: none !important;
+        }
+
+        /* Force Inter font on typography elements, leaving icons alone */
+        body, h1, h2, h3, h4, h5, h6, p, a, button, input, select, textarea, label, strong {
+            font-family: 'Inter', sans-serif !important;
+        }
+        /* Make sure it's crisp */
+        body {
+            -webkit-font-smoothing: antialiased !important;
+            -moz-osx-font-smoothing: grayscale !important;
+            letter-spacing: -0.01em;
+        }
+</style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <div class="navbar-custom">
+        <input type="checkbox" id="menu-toggle" class="menu-toggle">
+        <label for="menu-toggle" class="hamburger mb-0">
+            <span></span>
+            <span></span>
+            <span></span>
+        </label>
+        
+        <div class="overlay"></div>
+        
+        <div class="sidebar">
+            <label for="menu-toggle" style="display: block; padding: 10px 24px; font-size: 32px; font-weight: 300; color: #666; cursor: pointer; margin-bottom: 10px;">&times;</label>
+            <a href="#"><i class="fas fa-home"></i> Ana Sayfa</a>
+            <a href="#"><i class="fas fa-arrows-alt"></i> Modüller</a>
+            <a href="#" class="admin-only"><i class="far fa-user"></i> Kullanıcılar</a>
+            <a href="#" class="admin-only"><i class="fas fa-layer-group"></i> Gruplar</a>
+            <a href="#" class="admin-only"><i class="fas fa-layer-group"></i> Status</a>
+            <a href="#"><i class="far fa-calendar-alt"></i> Ajanda</a>
+            <a href="#"><i class="fas fa-list"></i> Listeler</a>
+            <a href="#"><i class="far fa-bell"></i> Bildirimler</a>
+            <a href="#" class="admin-only"><i class="far fa-image"></i> Giriş Slide</a>
+            <a href="#" class="admin-only"><i class="far fa-edit"></i> Giriş Yazısı</a>
+            <hr>
+            <a href="#" onclick="handleLogout(event)"><i class="fas fa-sign-out-alt"></i> Çıkış</a>
+        </div>
+
+        <div class="search-container">
+            <div style="position:relative; width: 250px;">
+                <input type="text" class="search-input" placeholder="Portalda Ara" style="width: 100%;">
+                <i class="fas fa-search" style="position:absolute; right: 15px; top: 50%; transform: translateY(-50%); color: #666; font-size: 13px;"></i>
+            </div>
+        </div>
+
+        <div class="user-info">
+            <strong id="userDisplayName">arge test</strong>
+            <img src="https://portal.melikgazi.bel.tr/images/logo.png" alt="Logo">
+        </div>
+    </div>
+
+    <div class="spacer"></div>
+
+    <!-- Main Content -->
+    <div class="container-fluid px-4">
+        <div class="row">
+            <!-- Left Column -->
+            <div class="col-xl-7 col-lg-6">
+                <!-- FAVORİLER -->
+                <div class="alan">
+                    <div class="modul">
+                        <div class="modul-title-left">
+                            <i class="fas fa-star" style="color: #ffc107;"></i> FAVORİLER
+                        </div>
+                    </div>
+                    
+                    <ul class="row module-list favorite-modules">
+                    </ul>
+                </div>
+
+                <!-- TÜM MODÜLLER -->
+                <div class="alan">
+                    <div class="modul">
+                        <div class="modul-title-left">
+                            <i class="far fa-star" style="color: #ffc107;"></i> TÜM MODÜLLER
+                        </div>
+                        <div>
+                            <label class="switch mb-0">
+                                <input type="checkbox" id="modullerToggle" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="collapsible-content" id="allModulesContent">
+                        <ul class="row module-list">
+                            <li class="col-6 col-sm-4 col-md-3 col-xl-2">
+                                <div class="module-card" onclick="openModuleModal('BULUT', '6908708124865200.png')">
+                                    
+                                <i class="far fa-star star-btn" onclick="event.stopPropagation(); toggleFav(this, 'BULUT');"></i>
+                                
+                                <div class="img-container" style="background-image: url('images/Moduller/6908708124865200.png')"></div>
+                                <strong>BULUT</strong>
+                            
+                                </div>
+                            </li>
+                            <li class="col-6 col-sm-4 col-md-3 col-xl-2">
+                                <div class="module-card" onclick="openModuleModal('ULAKBEL', '7028855945653200.jpg')">
+                                    
+                                <i class="far fa-star star-btn" onclick="event.stopPropagation(); toggleFav(this, 'ULAKBEL');"></i>
+                                
+                                <div class="img-container" style="background-image: url('images/Moduller/7028855945653200.jpg')"></div>
+                                <strong>ULAKBEL</strong>
+                            
+                                </div>
+                            </li>
+                            <li class="col-6 col-sm-4 col-md-3 col-xl-2">
+                                <div class="module-card" onclick="openModuleModal('E-POSTA', '6909882073094500.png')">
+                                    
+                                <i class="far fa-star star-btn" onclick="event.stopPropagation(); toggleFav(this, 'E-POSTA');"></i>
+                                
+                                <div class="img-container" style="background-image: url('images/Moduller/6909882073094500.png')"></div>
+                                <strong>E-POSTA</strong>
+                            
+                                </div>
+                            </li>
+                            <li class="col-6 col-sm-4 col-md-3 col-xl-2">
+                                <div class="module-card" onclick="openModuleModal('EBYS İÇİŞLERİ', '7060969185681200.jpg')">
+                                    
+                                <i class="far fa-star star-btn" onclick="event.stopPropagation(); toggleFav(this, 'EBYS İÇİŞLERİ');"></i>
+                                
+                                <div class="img-container" style="background-image: url('images/Moduller/7060969185681200.jpg')"></div>
+                                <strong>EBYS İÇİŞLERİ</strong>
+                            
+                                </div>
+                            </li>
+                            <li class="col-6 col-sm-4 col-md-3 col-xl-2">
+                                <div class="module-card" onclick="openModuleModal('ARAÇ TAKİP SİSTEMİ', '6910073906063600.png')">
+                                    
+                                <i class="far fa-star star-btn" onclick="event.stopPropagation(); toggleFav(this, 'ARAÇ TAKİP SİSTEMİ');"></i>
+                                
+                                <div class="img-container" style="background-image: url('images/Moduller/6910073906063600.png')"></div>
+                                <strong>ARAÇ TAKİP SİSTEMİ</strong>
+                            
+                                </div>
+                            </li>
+                            <li class="col-6 col-sm-4 col-md-3 col-xl-2">
+                                <div class="module-card" onclick="openModuleModal('PERSONEL TAKİP', '6910191639217300.png')">
+                                    
+                                <i class="far fa-star star-btn" onclick="event.stopPropagation(); toggleFav(this, 'PERSONEL TAKİP');"></i>
+                                
+                                <div class="img-container" style="background-image: url('images/Moduller/6910191639217300.png')"></div>
+                                <strong>PERSONEL TAKİP</strong>
+                            
+                                </div>
+                            </li>
+                            
+                            <li class="col-6 col-sm-4 col-md-3 col-xl-2">
+                                <div class="module-card" onclick="openModuleModal('CBS', '6909274126891400.png')">
+                                    
+                                <i class="far fa-star star-btn" onclick="event.stopPropagation(); toggleFav(this, 'CBS');"></i>
+                                
+                                <div class="broken-icon-container"><i class="fas fa-map-marked-alt"></i></div>
+                                <strong>CBS</strong>
+                            
+                                </div>
+                            </li>
+                            <li class="col-6 col-sm-4 col-md-3 col-xl-2">
+                                <div class="module-card" onclick="openModuleModal('MOBEL', '6909449720720800.jpg')">
+                                    
+                                <i class="far fa-star star-btn" onclick="event.stopPropagation(); toggleFav(this, 'MOBEL');"></i>
+                                
+                                <div class="broken-icon-container"><i class="fas fa-sitemap"></i></div>
+                                <strong>MOBEL</strong>
+                            
+                                </div>
+                            </li>
+                            <li class="col-6 col-sm-4 col-md-3 col-xl-2">
+                                <div class="module-card" onclick="openModuleModal('GEODİ', '6909381752720000.png')">
+                                    
+                                <i class="far fa-star star-btn" onclick="event.stopPropagation(); toggleFav(this, 'GEODİ');"></i>
+                                
+                                <div class="broken-icon-container"><i class="fas fa-search-location"></i></div>
+                                <strong>GEODİ</strong>
+                            
+                                </div>
+                            </li>
+                            <li class="col-6 col-sm-4 col-md-3 col-xl-2">
+                                <div class="module-card" onclick="openModuleModal('İŞ ZEKASI - RAPORLAMA', '6909594843782600.png')">
+                                    
+                                <i class="far fa-star star-btn" onclick="event.stopPropagation(); toggleFav(this, 'İŞ ZEKASI - RAPORLAMA');"></i>
+                                
+                                <div class="broken-icon-container"><i class="fas fa-chart-line"></i></div>
+                                <strong>İŞ ZEKASI - RAPORLAMA</strong>
+                            
+                                </div>
+                            </li>
+                            <li class="col-6 col-sm-4 col-md-3 col-xl-2">
+                                <div class="module-card" onclick="openModuleModal('WEB İÇERİK YÖNETİM SİSTEMİ', '6910005003407600.png')">
+                                    
+                                <i class="far fa-star star-btn" onclick="event.stopPropagation(); toggleFav(this, 'WEB İÇERİK YÖNETİM SİSTEMİ');"></i>
+                                
+                                <div class="broken-icon-container"><i class="fas fa-laptop-code"></i></div>
+                                <strong>WEB İÇERİK YÖNETİM SİSTEMİ</strong>
+                            
+                                </div>
+                            </li>
+                            <li class="col-6 col-sm-4 col-md-3 col-xl-2">
+                                <div class="module-card" onclick="openModuleModal('KAMUTECH', '6910146590124600.png')">
+                                    
+                                <i class="far fa-star star-btn" onclick="event.stopPropagation(); toggleFav(this, 'KAMUTECH');"></i>
+                                
+                                <div class="broken-icon-container"><i class="fas fa-users-cog"></i></div>
+                                <strong>KAMUTECH</strong>
+                            
+                                </div>
+                            </li>
+                            <li class="col-6 col-sm-4 col-md-3 col-xl-2">
+                                <div class="module-card" onclick="openModuleModal('TESİS', '7026095782872600.png')">
+                                    
+                                <i class="far fa-star star-btn" onclick="event.stopPropagation(); toggleFav(this, 'TESİS');"></i>
+                                
+                                <div class="broken-icon-container"><i class="fas fa-building"></i></div>
+                                <strong>TESİS</strong>
+                            
+                                </div>
+                            </li>
+                            <li class="col-6 col-sm-4 col-md-3 col-xl-2">
+                                <div class="module-card" onclick="openModuleModal('KARİYER', '7025844437716400.png')">
+                                    
+                                <i class="far fa-star star-btn" onclick="event.stopPropagation(); toggleFav(this, 'KARİYER');"></i>
+                                
+                                <div class="broken-icon-container"><i class="fas fa-user-tie"></i></div>
+                                <strong>KARİYER</strong>
+                            
+                                </div>
+                            </li>
+                            <li class="col-6 col-sm-4 col-md-3 col-xl-2">
+                                <div class="module-card" onclick="openModuleModal('VGA', '7026184426247800.png')">
+                                    
+                                <i class="far fa-star star-btn" onclick="event.stopPropagation(); toggleFav(this, 'VGA');"></i>
+                                
+                                <div class="broken-icon-container"><i class="fas fa-file-medical"></i></div>
+                                <strong>VGA</strong>
+                            
+                                </div>
+                            </li>
+                            <li class="col-6 col-sm-4 col-md-3 col-xl-2">
+                                <div class="module-card" onclick="openModuleModal('İŞ SAĞLIĞI VE GÜVENLİĞİ', '7026254327935200.png')">
+                                    
+                                <i class="far fa-star star-btn" onclick="event.stopPropagation(); toggleFav(this, 'İŞ SAĞLIĞI VE GÜVENLİĞİ');"></i>
+                                
+                                <div class="broken-icon-container"><i class="fas fa-hard-hat"></i></div>
+                                <strong>İŞ SAĞLIĞI VE GÜVENLİĞİ</strong>
+                            
+                                </div>
+                            </li>
+                            <li class="col-6 col-sm-4 col-md-3 col-xl-2">
+                                <div class="module-card" onclick="openModuleModal('KENTSEL DÖNÜŞÜM İŞ TAKİBİ', '7026295828279200.png')">
+                                    
+                                <i class="far fa-star star-btn" onclick="event.stopPropagation(); toggleFav(this, 'KENTSEL DÖNÜŞÜM İŞ TAKİBİ');"></i>
+                                
+                                <div class="broken-icon-container"><i class="fas fa-house-damage"></i></div>
+                                <strong>KENTSEL DÖNÜŞÜM İŞ TAKİBİ</strong>
+                            
+                                </div>
+                            </li>
+                            <li class="col-6 col-sm-4 col-md-3 col-xl-2">
+                                <div class="module-card" onclick="openModuleModal('ARŞİV', '7026331778591600.png')">
+                                    
+                                <i class="far fa-star star-btn" onclick="event.stopPropagation(); toggleFav(this, 'ARŞİV');"></i>
+                                
+                                <div class="broken-icon-container"><i class="fas fa-archive"></i></div>
+                                <strong>ARŞİV</strong>
+                            
+                                </div>
+                            </li>
+                            <li class="col-6 col-sm-4 col-md-3 col-xl-2">
+                                <div class="module-card" onclick="openModuleModal('SIFIR ATIK', '7028614256624800.png')">
+                                    
+                                <i class="far fa-star star-btn" onclick="event.stopPropagation(); toggleFav(this, 'SIFIR ATIK');"></i>
+                                
+                                <div class="broken-icon-container"><i class="fas fa-leaf"></i></div>
+                                <strong>SIFIR ATIK</strong>
+                            
+                                </div>
+                            </li>
+                            <li class="col-6 col-sm-4 col-md-3 col-xl-2">
+                                <div class="module-card" onclick="openModuleModal('TRANSKRİPTOR', '7028802246966800.png')">
+                                    
+                                <i class="far fa-star star-btn" onclick="event.stopPropagation(); toggleFav(this, 'TRANSKRİPTOR');"></i>
+                                
+                                <div class="broken-icon-container"><i class="fas fa-headset"></i></div>
+                                <strong>TRANSKRİPTOR</strong>
+                            
+                                </div>
+                            </li>
+                            <li class="col-6 col-sm-4 col-md-3 col-xl-2">
+                                <div class="module-card" onclick="openModuleModal('MGAZİ.Lİ - QR LİNK', '7028867002747200.png')">
+                                    
+                                <i class="far fa-star star-btn" onclick="event.stopPropagation(); toggleFav(this, 'MGAZİ.Lİ - QR LİNK');"></i>
+                                
+                                <div class="broken-icon-container"><i class="fas fa-qrcode"></i></div>
+                                <strong>MGAZİ.Lİ - QR LİNK</strong>
+                            
+                                </div>
+                            </li>
+                            <li class="col-6 col-sm-4 col-md-3 col-xl-2">
+                                <div class="module-card" onclick="openModuleModal('MECLİS', '7054636129088000.png')">
+                                    
+                                <i class="far fa-star star-btn" onclick="event.stopPropagation(); toggleFav(this, 'MECLİS');"></i>
+                                
+                                <div class="broken-icon-container"><i class="fas fa-university"></i></div>
+                                <strong>MECLİS</strong>
+                            
+                                </div>
+                            </li>
+                            <li class="col-6 col-sm-4 col-md-3 col-xl-2">
+                                <div class="module-card" onclick="openModuleModal('SAHİPLEN', '7060838458244200.png')">
+                                    
+                                <i class="far fa-star star-btn" onclick="event.stopPropagation(); toggleFav(this, 'SAHİPLEN');"></i>
+                                
+                                <div class="broken-icon-container"><i class="fas fa-paw"></i></div>
+                                <strong>SAHİPLEN</strong>
+                            
+                                </div>
+                            </li>
+                            <li class="col-6 col-sm-4 col-md-3 col-xl-2">
+                                <div class="module-card" onclick="openModuleModal('META', '7060949235806200.png')">
+                                    
+                                <i class="far fa-star star-btn" onclick="event.stopPropagation(); toggleFav(this, 'META');"></i>
+                                
+                                <div class="broken-icon-container"><i class="fas fa-desktop"></i></div>
+                                <strong>META</strong>
+                            
+                                </div>
+                            </li>
+                            <li class="col-6 col-sm-4 col-md-3 col-xl-2">
+                                <div class="module-card" onclick="openModuleModal('E-İMAR', '7084866832376400.png')">
+                                    
+                                <i class="far fa-star star-btn" onclick="event.stopPropagation(); toggleFav(this, 'E-İMAR');"></i>
+                                <div class="broken-icon-container"><i class="fas fa-city"></i></div>
+                                <strong>E-İMAR</strong>
+                            
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column -->
+            <div class="col-xl-5 col-lg-6">
+                <!-- AJANDA -->
+                <div class="alan">
+                    <div class="modul agenda-header border-0 mb-0 pb-2">
+                        <div class="modul-title-left font-weight-bold" style="font-size: 14px;">
+                            <i class="far fa-calendar-alt text-dark" style="font-size: 16px;"></i> 
+                            AJANDA &nbsp;<span id="agenda-month-year" style="font-weight:normal; font-size: 12px; color: #555;">Temmuz 2026</span>
+                        </div>
+                        <div>
+                            <button class="btn btn-primary-dodger-blue mr-1" onclick="calendar.prev()"><i class="fas fa-chevron-left" style="font-size: 10px;"></i></button>
+                            <button class="btn btn-primary-dodger-blue" onclick="calendar.next()"><i class="fas fa-chevron-right" style="font-size: 10px;"></i></button>
+                        </div>
+                    </div>
+                    
+                                        <div id="calendar"></div>
+                </div>
+
+                <!-- GÜNLÜK ETKİNLİKLER -->
+                <div class="alan" id="daily-events-container">
+                    <div class="modul agenda-header border-0 mb-2 pb-2 mt-2" style="border-bottom: 1px solid #f0f0f0 !important;">
+                        <div class="modul-title-left font-weight-bold" style="font-size: 14px; display:flex; align-items:center;">
+                            <i class="fas fa-calendar-day text-dark" style="font-size: 16px; margin-right:8px;"></i> 
+                            <span id="daily-events-title" style="text-transform:uppercase;">BUGÜNÜN ETKİNLİKLERİ</span>
+                        </div>
+                        <div style="display:flex; align-items:center;">
+                            <div class="dropdown" style="margin-right:8px;">
+                                <button class="btn btn-sm dropdown-toggle" type="button" id="agendaSortDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="font-size:11px; font-weight:600; border:1px solid #e2e8f0; border-radius:20px; padding:3px 12px; background:#f8f9fa; color:#4a5568; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+                                    Saate Göre
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="agendaSortDropdown" style="border-radius: 12px; box-shadow: 0 6px 16px rgba(0,0,0,0.08); font-size:12px; min-width:140px; padding:6px 0; border:none; margin-top:4px;">
+                                    <a class="dropdown-item" href="#" onclick="setAgendaSortMode('time'); return false;" style="padding: 6px 16px;">Saate Göre</a>
+                                    <a class="dropdown-item" href="#" onclick="setAgendaSortMode('importance'); return false;" style="padding: 6px 16px;">Öneme Göre</a>
+                                    <a class="dropdown-item" href="#" onclick="setAgendaSortMode('manual'); return false;" style="padding: 6px 16px;">Özel Sıra</a>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary-dodger-blue mr-1" style="padding: 2px 8px; border-radius:4px;" onclick="changeWidgetDate(-1)"><i class="fas fa-chevron-left" style="font-size: 10px;"></i></button>
+                            <button class="btn btn-primary-dodger-blue" style="padding: 2px 8px; border-radius:4px;" onclick="changeWidgetDate(1)"><i class="fas fa-chevron-right" style="font-size: 10px;"></i></button>
+                        </div>
+                    </div>
+                    <div id="daily-events-widget" style="padding: 0 5px 10px 5px;"></div>
+                </div>
+
+                <!-- LİSTELER -->
+                <div class="alan">
+                    <div class="modul agenda-header border-0 mb-0 pb-2 mt-2">
+                        <div class="modul-title-left font-weight-bold" style="font-size: 14px;">
+                            <i class="fas fa-list text-dark" style="font-size: 16px;"></i> 
+                            LİSTELER &nbsp;<span style="font-weight:normal; font-size: 12px; color: #555;">14 Temmuz 2026</span>
+                        </div>
+                        <div>
+                            <button class="btn btn-warning-orange mr-1"><i class="fas fa-chevron-left" style="font-size: 10px;"></i></button>
+                            <button class="btn btn-warning-orange"><i class="fas fa-chevron-right" style="font-size: 10px;"></i></button>
+                        </div>
+                    </div>
+                    
+                    <div class="list-card">
+                        <h6 class="font-weight-bold">YEMEKHANE LİSTESİ</h6>
+                        <ul>
+                            <li>MERCİMEK ÇORBA</li>
+                            <li>PATLICAN GÜVEÇ</li>
+                            <li>PİRİNÇ PİLAVI</li>
+                            <li>CACIK</li>
+                        </ul>
+                        <div class="date-badge">
+                            <i class="fas fa-calendar-day"></i> 14 Temmuz 2026 Salı
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FAB Button -->
+    <div class="fab">
+        <i class="fas fa-bell"></i>
+    </div>
+
+    <!-- Module Detail Modal -->
+    <div class="modal fade" id="moduleModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header border-0 pb-0">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body text-center pt-0">
+            <img src="" id="modalModuleImg" class="modal-module-img" alt="Module Image">
+            <h5 class="modal-title font-weight-bold mb-3" id="modalModuleTitle">MODUL ADI</h5>
+            
+            <a href="#" class="resim-link">
+                <i class="fas fa-image"></i> RESİMLERİ GÖSTER
+            </a>
+            
+            <div class="text-left mt-4">
+                <h6 class="font-weight-bold mb-3"><i class="fas fa-link"></i> LİNKLER</h6>
+                <div id="modalLinksContainer">
+                    <button class="btn btn-module-link">WEB</button>
+                    <button class="btn btn-module-link">ANDROID</button>
+                    <button class="btn btn-module-link">IOS</button>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    
+    <!-- Agenda Modal (Unified) -->
+    <div class="modal fade" id="agendaModal" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content" style="border-radius: 12px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+          <div class="modal-header border-0 pb-0">
+            <h5 class="modal-title font-weight-bold" id="agendaModalTitle"><i class="far fa-calendar-alt text-primary"></i> Gün Detayları</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <!-- Events List Section -->
+            <div id="modalEventList" class="mb-4" style="max-height: 250px; overflow-y: auto; padding-right: 5px;">
+                <!-- Events will be populated here -->
+            </div>
+            
+            <!-- Add Event Form Section -->
+            <button class="btn btn-outline-success btn-sm w-100 mb-3" type="button" data-toggle="collapse" data-target="#agendaFormCollapse" aria-expanded="false" aria-controls="agendaFormCollapse" style="border-radius: 8px; font-weight: 600; padding: 8px;">
+                <i class="fas fa-plus-circle"></i> Yeni Plan Ekle
+            </button>
+            
+            <div class="collapse" id="agendaFormCollapse">
+              <div class="card card-body" style="background-color: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; margin-bottom: 10px;">
+                <form id="agendaForm">
+              <input type="hidden" id="agendaDate">
+              <div class="form-group">
+                <label for="agendaTitle" class="font-weight-bold" style="font-size: 13px;">Plan/Etkinlik Adı</label>
+                <input type="text" class="form-control" id="agendaTitle" placeholder="Örn: İmar Toplantısı" required style="border-radius: 6px;">
+              </div>
+              <div class="form-group">
+                <label for="agendaTime" class="font-weight-bold" style="font-size: 13px;">Saat (İsteğe Bağlı)</label>
+                <input type="time" class="form-control" id="agendaTime" style="border-radius: 6px;">
+              </div>
+              <div class="form-group">
+                <label for="agendaImportance" class="font-weight-bold" style="font-size: 13px;">Önem Derecesi (1-5)</label>
+                <select class="form-control" id="agendaImportance" style="border-radius: 6px;">
+                    <option value="5" style="color:#dc3545;">⭐⭐⭐⭐⭐ - Çok Kritik (Kırmızı)</option>
+                    <option value="4" style="color:#fd7e14;">⭐⭐⭐⭐ - Önemli (Turuncu)</option>
+                    <option value="3" selected style="color:#ffc107;">⭐⭐⭐ - Normal (Sarı)</option>
+                    <option value="2" style="color:#6f42c1;">⭐⭐ - Düşük (Mor)</option>
+                    <option value="1" style="color:#28a745;">⭐ - Bilgi (Yeşil)</option>
+                </select>
+              </div>
+              <div class="form-group admin-event-type-container" style="display:none;">
+                <label for="agendaEventType" class="font-weight-bold" style="font-size: 13px;">Etkinlik Tipi (Sadece Yetkili)</label>
+                <select class="form-control" id="agendaEventType" style="border-radius: 6px;">
+                    <option value="admin" style="color:#007bff; font-weight:bold;">Tüm Personel Görsün (Yetkili Etkinliği)</option>
+                    <option value="personal">Sadece Ben Göreyim (Kişisel Etkinlik)</option>
+                </select>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer border-0 pt-0">
+            <button type="button" class="btn btn-light" data-dismiss="modal" style="border-radius: 20px; font-weight: 600; padding: 6px 20px;">Kapat</button>
+            <button type="button" class="btn btn-primary-dodger-blue" onclick="saveAgendaEvent()" style="border-radius: 20px; font-weight: 600; padding: 6px 20px;">Kaydet</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Birthday Modal -->
+    <div class="modal fade" id="birthdayModal" tabindex="-1" role="dialog" aria-hidden="true" style="z-index: 999999;">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content" style="border-radius: 20px; border: none; box-shadow: 0 20px 50px rgba(0,0,0,0.2); overflow: hidden; background: linear-gradient(135deg, #ffffff 0%, #f9f9f9 100%); text-align: center;">
+          <div class="modal-body p-5">
+            <div style="font-size: 60px; margin-bottom: -10px;">🎂</div>
+            <h2 class="font-weight-bold mt-3 mb-2" style="color: #ff3366; font-family: 'Inter', sans-serif; letter-spacing: -1px;">İyi Ki Doğdun!</h2>
+            <h4 class="font-weight-bold text-dark mb-4" id="birthdayName" style="font-size: 20px;">Personel</h4>
+            <p style="color: #666; font-size: 15px; line-height: 1.6; font-weight: 500;">
+              Yeni yaşının sana sağlık, mutluluk ve başarı getirmesini dileriz.<br>
+              Seninle çalışmaktan gurur duyuyoruz! 🎉
+            </p>
+            <button type="button" class="btn btn-primary mt-4 px-5 py-2" data-dismiss="modal" style="border-radius: 30px; background: linear-gradient(45deg, #ff3366, #ff7b54); border: none; font-weight: bold; box-shadow: 0 4px 15px rgba(255, 51, 102, 0.4); transition: transform 0.2s;">
+              Teşekkür Ederim
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+    
+    <script>
+        // Menu Toggle functionality for overlay
+        document.getElementById('menu-toggle').addEventListener('change', function() {
+            if (this.checked) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = 'auto';
+            }
+        });
+        
+        // Close menu when clicking overlay
+        document.querySelector('.overlay').addEventListener('click', function() {
+            document.getElementById('menu-toggle').checked = false;
+            document.body.style.overflow = 'auto';
+        });
+
+        
+        
+        // --- ROLE LOGIC ---
+        function applyRoleUI() {
+            const role = localStorage.getItem('portal_user_role') || 'personnel';
+            const username = localStorage.getItem('portal_username') || 'personel1';
+            const nameDisplay = document.getElementById('userDisplayName');
+            
+            const displayUser = username.charAt(0).toUpperCase() + username.slice(1);
+            
+            if (role === 'admin') {
+                if(nameDisplay) nameDisplay.innerText = displayUser + ' (Yetkili)';
+                // Admin sees everything, do nothing.
+            } else {
+                if(nameDisplay) nameDisplay.innerText = displayUser;
+                // Hide admin-only links
+                const adminLinks = document.querySelectorAll('.admin-only');
+                adminLinks.forEach(link => {
+                    link.style.display = 'none';
+                });
+            }
+        }
+        
+        function handleLogout(e) {
+            e.preventDefault();
+            localStorage.removeItem('portal_user_role');
+            window.location.href = 'index.html';
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            applyRoleUI();
+        });
+        // --- END ROLE LOGIC ---
+
+        // --- AGENDA LOGIC ---
+        let calendar;
+        let agendaEvents = [];
+        let currentWidgetDateStr = null;
+        let currentEditEventId = null;
+        
+        const IMPORTANCE_COLORS = {
+            '5': '#dc3545',
+            '4': '#fd7e14',
+            '3': '#ffc107',
+            '2': '#6f42c1',
+            '1': '#28a745'
+        };
+        
+        function getStorageKey() {
+            const username = localStorage.getItem('portal_username') || 'testuser';
+            if (username === 'admin') return 'portal_agenda_events_admin_personal';
+            return 'portal_agenda_events_' + username;
+        }
+
+        function initWidgetDate() {
+            const offset = new Date().getTimezoneOffset();
+            const localDate = new Date(new Date().getTime() - (offset*60*1000));
+            currentWidgetDateStr = localDate.toISOString().split('T')[0];
+        }
+
+        window.changeWidgetDate = function(days) {
+            if(!currentWidgetDateStr) initWidgetDate();
+            const parts = currentWidgetDateStr.split('-');
+            let d = new Date(parts[0], parts[1]-1, parts[2]);
+            d.setDate(d.getDate() + days);
+            
+            const y = d.getFullYear();
+            const m = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            currentWidgetDateStr = `${y}-${m}-${day}`;
+            
+            renderTodaysEvents();
+        };
+        
+        function loadAgendaEvents() {
+            let events = [];
+            const currentRole = localStorage.getItem('portal_user_role') || 'personnel';
+            const currentUsername = localStorage.getItem('portal_username') || 'testuser';
+            
+            try {
+                let adminSaved = localStorage.getItem('portal_agenda_events_admin');
+                if (adminSaved) {
+                    let adminEvs = JSON.parse(adminSaved);
+                    adminEvs.forEach(ev => {
+                        events.push({ ...ev, isAdmin: true });
+                    });
+                }
+            } catch (e) {}
+            
+            try {
+                let userSaved = localStorage.getItem(getStorageKey());
+                if (userSaved) {
+                    let userEvs = JSON.parse(userSaved);
+                    userEvs.forEach(ev => {
+                        events.push({ ...ev, isAdmin: false });
+                    });
+                }
+            } catch (e) {}
+            
+            agendaEvents = events;
+            
+            return agendaEvents.map(ev => {
+                let color = ev.isAdmin ? '#007bff' : IMPORTANCE_COLORS[ev.importance || '3'];
+                return {
+                    id: ev.id,
+                    title: ev.title,
+                    start: ev.date + (ev.time ? 'T' + ev.time : ''),
+                    color: color,
+                    extendedProps: { time: ev.time, dateStr: ev.date, importance: ev.importance || '3', completed: ev.completed, isAdmin: ev.isAdmin }
+                };
+            });
+        }
+
+        window.initCalendar = function(defaultDate = null) {
+            var calendarEl = document.getElementById('calendar');
+            if (calendar) {
+                calendar.destroy();
+            }
+            
+            calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                initialDate: defaultDate || new Date(),
+                locale: 'tr',
+                firstDay: 1,
+                headerToolbar: false, 
+                height: 'auto',
+                events: function(info, successCallback, failureCallback) {
+                    successCallback(loadAgendaEvents());
+                },
+                dayCellClassNames: function(arg) {
+                    const y = arg.date.getFullYear();
+                    const m = String(arg.date.getMonth() + 1).padStart(2, '0');
+                    const d = String(arg.date.getDate()).padStart(2, '0');
+                    const dateStr = `${y}-${m}-${d}`;
+                    
+                    const dayEvents = agendaEvents.filter(e => e.date === dateStr);
+                    if (dayEvents.length === 0) return [];
+                    
+                    let maxImp = 0;
+                    dayEvents.forEach(ev => {
+                        if (!ev.isAdmin) {
+                            let imp = parseInt(ev.importance || '3');
+                            if (imp > maxImp) maxImp = imp;
+                        }
+                    });
+                    
+                    if (maxImp > 0) return [`fc-day-importance-${maxImp}`];
+                    return [];
+                },
+                dayCellContent: function(arg) {
+                    const y = arg.date.getFullYear();
+                    const m = String(arg.date.getMonth() + 1).padStart(2, '0');
+                    const d = String(arg.date.getDate()).padStart(2, '0');
+                    const dateStr = `${y}-${m}-${d}`;
+                    const dayNum = arg.date.getDate();
+                    
+                    const dayEvents = agendaEvents.filter(e => e.date === dateStr);
+                    
+                    dayEvents.sort((a, b) => {
+                        if (a.isAdmin && !b.isAdmin) return -1;
+                        if (!a.isAdmin && b.isAdmin) return 1;
+                        return parseInt(b.importance || '3') - parseInt(a.importance || '3');
+                    });
+                    
+                    let dotsHtml = '';
+                    if (dayEvents.length > 0) {
+                        const displayEvents = dayEvents.slice(0, 8);
+                        dotsHtml = '<div style="display:flex; flex-direction:column; flex-wrap: wrap; height: 42px; justify-content:center; gap:3px; margin-left:6px; max-width: 20px;">';
+                        displayEvents.forEach(ev => {
+                            const color = ev.isAdmin ? '#007bff' : IMPORTANCE_COLORS[ev.importance || '3'];
+                            const opacity = ev.completed ? '0.3' : '1';
+                            dotsHtml += `<div style="cursor:pointer; width:7px; height:7px; border-radius:50%; background-color:${color}; opacity:${opacity}; box-shadow:0 1px 3px rgba(0,0,0,0.2); transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.5)'" onmouseout="this.style.transform='scale(1)'"></div>`;
+                        });
+                        dotsHtml += '</div>';
+                    }
+                    
+                    let tooltipAttr = "";
+                    if (dayEvents.length > 0) {
+                        let tooltipText = "<div style='display:flex; flex-direction:column; padding: 4px 0; min-width: 180px;'>";
+                        tooltipText += dayEvents.map((e, index) => {
+                            const isLast = index === dayEvents.length - 1;
+                            const borderStyle = isLast ? '' : "border-bottom: 1px solid rgba(0,0,0,0.06); padding-bottom: 12px; margin-bottom: 12px; box-shadow: 0 4px 4px -4px rgba(0,0,0,0.05);";
+                            
+                            const color = e.isAdmin ? '#007bff' : IMPORTANCE_COLORS[e.importance || '3'];
+                            const opacity = e.completed ? '0.5' : '1';
+                            const textDeco = e.completed ? 'line-through' : 'none';
+                            const timeBadge = e.time ? `<div style='font-size:11px; color:#4a5568; font-weight:700; background:#edf2f7; border:1px solid #e2e8f0; padding:4px 8px; border-radius:6px; margin-left:24px; white-space:nowrap; display:flex; align-items:center; gap:4px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); opacity:${opacity};'><i class='far fa-clock'></i> ${e.time}</div>` : '';
+                            
+                            return `<div style='display:flex; align-items:center; justify-content:space-between; width: 100%; ${borderStyle}'>
+                                <div style='display:flex; align-items:center; opacity:${opacity};'>
+                                    <div style='width:12px; height:12px; border-radius:50%; background-color:${color}; margin-right:12px; flex-shrink:0; box-shadow:0 1px 3px rgba(0,0,0,0.2);'></div>
+                                    <div style='font-size:14px; color:#1a202c; font-weight:600; line-height:1.3; letter-spacing: -0.2px; text-decoration: ${textDeco};'>${e.title}</div>
+                                </div>
+                                ${timeBadge}
+                            </div>`;
+                        }).join('');
+                        tooltipText += "</div>";
+                        let escapedTooltipText = tooltipText.replace(/"/g, '&quot;');
+                        tooltipAttr = `data-toggle="tooltip" data-html="true" data-placement="right" title="${escapedTooltipText}"`;
+                    }
+                    
+                    let html = `
+                        <div class="custom-day-cell" ${tooltipAttr} style="cursor:pointer; display:flex; flex-direction:row; justify-content:center; align-items:center; width:100%; height:100%;">
+                            <div class="date-month" style="font-weight:bold; font-size:15px; color:#333;">${dayNum}</div>
+                            ${dotsHtml}
+                        </div>
+                    `;
+                    return { html: html };
+                },
+                datesSet: function(info) {
+                    document.getElementById('agenda-month-year').textContent = info.view.title;
+                },
+                dateClick: function(info) {
+                    currentEditEventId = null;
+                    currentWidgetDateStr = info.dateStr;
+                    renderTodaysEvents();
+                    
+                    const dateObj = new Date(info.dateStr);
+                    const displayDate = dateObj.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' });
+                    document.getElementById('agendaModalTitle').innerHTML = `<i class="far fa-calendar-alt text-primary"></i> ${displayDate} Planları`;
+                    
+                    document.getElementById('agendaDate').value = info.dateStr;
+                    document.getElementById('agendaTitle').value = '';
+                    document.getElementById('agendaTime').value = '';
+                    document.getElementById('agendaImportance').value = '3';
+                    $('#agendaFormCollapse').collapse('hide');
+                    
+                    const currentUsername = localStorage.getItem('portal_username') || 'testuser';
+                    const typeContainer = document.querySelector('.admin-event-type-container');
+                    if (typeContainer) {
+                        typeContainer.style.display = (currentUsername === 'admin') ? 'block' : 'none';
+                    }
+                    const typeSelect = document.getElementById('agendaEventType');
+                    if(typeSelect) typeSelect.value = 'admin';
+                    
+                    renderEventList(info.dateStr);
+                    $('#agendaModal').modal('show');
+                }
+            });
+            calendar.render();
+            
+            // Destroy any existing tooltips before re-initializing to prevent ghost tooltips
+                        $('[data-toggle="tooltip"]').tooltip('dispose');
+            
+            if (!document.getElementById('premium-tooltip-override')) {
+                const style = document.createElement('style');
+                style.id = 'premium-tooltip-override';
+                style.innerHTML = `
+                    .tooltip.show { opacity: 1 !important; }
+                    .tooltip .arrow { display: none !important; }
+                `;
+                document.head.appendChild(style);
+            }
+
+            
+            // Initialize aesthetic tooltips
+            $('body').tooltip({
+                selector: '[data-toggle="tooltip"]',
+                boundary: 'window',
+                html: true,
+                sanitize: false,
+                animation: false,
+                delay: { "show": 0, "hide": 0 },
+                template: '<div class="tooltip custom-light-tooltip" role="tooltip" style="margin-left: 5px;"><div class="arrow"></div><div class="tooltip-inner"></div></div>'
+            });
+            
+            setTimeout(renderTodaysEvents, 100);
+        };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            initCalendar();
+        });
+
+        window.saveAgendaEvent = function() {
+            const dateStr = document.getElementById('agendaDate').value;
+            const title = document.getElementById('agendaTitle').value;
+            const time = document.getElementById('agendaTime').value;
+            const importance = document.getElementById('agendaImportance').value || '3';
+            
+            if(!title) { alert('Lütfen bir başlık girin.'); return; }
+            
+            const currentUsername = localStorage.getItem('portal_username') || 'testuser';
+            
+            let isEventAdmin = false;
+            if (currentUsername === 'admin') {
+                const typeSelect = document.getElementById('agendaEventType');
+                if(typeSelect) {
+                    isEventAdmin = (typeSelect.value === 'admin');
+                } else {
+                    isEventAdmin = true;
+                }
+            }
+            
+            if (currentEditEventId) {
+                const evIndex = agendaEvents.findIndex(e => e.id === currentEditEventId);
+                if (evIndex !== -1) {
+                    agendaEvents[evIndex].date = dateStr;
+                    agendaEvents[evIndex].title = title;
+                    agendaEvents[evIndex].time = time;
+                    agendaEvents[evIndex].importance = importance;
+                    agendaEvents[evIndex].isAdmin = isEventAdmin; // Update type if admin changed it
+                }
+                currentEditEventId = null;
+            } else {
+                const newEvent = {
+                    id: 'evt_' + Date.now(),
+                    date: dateStr,
+                    title: title,
+                    time: time,
+                    importance: importance,
+                    completed: false,
+                    isAdmin: isEventAdmin
+                };
+                agendaEvents.push(newEvent);
+            }
+            
+            const toSaveAdmin = agendaEvents.filter(e => e.isAdmin);
+            const toSaveUser = agendaEvents.filter(e => !e.isAdmin);
+            
+            localStorage.setItem('portal_agenda_events_admin', JSON.stringify(toSaveAdmin));
+            localStorage.setItem(getStorageKey(), JSON.stringify(toSaveUser));
+            
+            document.getElementById('agendaTitle').value = '';
+            document.getElementById('agendaTime').value = '';
+            document.getElementById('agendaImportance').value = '3';
+            
+            $('#agendaFormCollapse').collapse('hide');
+            
+            renderEventList(dateStr);
+            renderTodaysEvents();
+            
+            let currentViewDate = calendar.getDate();
+            initCalendar(currentViewDate);
+        };
+
+        window.editAgendaEvent = function(id) {
+            const ev = agendaEvents.find(e => e.id === id);
+            if(ev) {
+                currentEditEventId = ev.id;
+                document.getElementById('agendaDate').value = ev.date;
+                document.getElementById('agendaTitle').value = ev.title;
+                document.getElementById('agendaTime').value = ev.time || '';
+                document.getElementById('agendaImportance').value = ev.importance || '3';
+                
+                const currentUsername = localStorage.getItem('portal_username') || 'testuser';
+                const typeContainer = document.querySelector('.admin-event-type-container');
+                if (typeContainer) {
+                    typeContainer.style.display = (currentUsername === 'admin') ? 'block' : 'none';
+                }
+                const typeSelect = document.getElementById('agendaEventType');
+                if(typeSelect && currentUsername === 'admin') {
+                    typeSelect.value = ev.isAdmin ? 'admin' : 'personal';
+                }
+                
+                // Show modal if it was closed
+                $('#agendaModal').modal('show');
+                // Open collapse form
+                $('#agendaFormCollapse').collapse('show');
+            }
+        };
+
+        window.renderEventList = function(dateStr) {
+            const listEl = document.getElementById('modalEventList');
+            if(!listEl) return;
+            
+            const dayEvents = agendaEvents.filter(e => e.date === dateStr);
+            dayEvents.sort((a, b) => {
+                if (a.isAdmin && !b.isAdmin) return -1;
+                if (!a.isAdmin && b.isAdmin) return 1;
+                return parseInt(b.importance || '3') - parseInt(a.importance || '3');
+            });
+            
+            const currentRole = localStorage.getItem('portal_user_role') || 'personnel';
+            
+            let html = '';
+            if (dayEvents.length === 0) {
+                html = '<div class="text-center text-muted py-3" style="font-size:12px;"><i class="far fa-folder-open mb-2" style="font-size:20px;"></i><br>Bu tarihe ait plan bulunamadı.</div>';
+            } else {
+                dayEvents.forEach(ev => {
+                    const timeStr = ev.time ? `Saat: ${ev.time}` : 'Tüm Gün';
+                    const isChecked = ev.completed ? 'checked' : '';
+                    const color = ev.isAdmin ? '#007bff' : IMPORTANCE_COLORS[ev.importance || '3'];
+                    const titleStyle = ev.completed ? `text-decoration: line-through; opacity: 0.5; color: ${color};` : `color: ${color};`;
+                    const containerOpacity = ev.completed ? 'opacity: 0.7;' : '';
+                    const stars = '⭐'.repeat(parseInt(ev.importance || '3'));
+                    
+                    const canEdit = (currentRole === 'admin') || (!ev.isAdmin);
+                    const checkboxHtml = canEdit ? `<input type="checkbox" style="width: 18px; height: 18px; margin-right: 12px; cursor: pointer;" ${isChecked} onchange="toggleEventCompletion('${ev.id}', '${dateStr}')">` : 
+                                                   `<div style="width: 18px; height: 18px; margin-right: 12px;"></div>`;
+                    const editHtml = canEdit ? `<i class="fas fa-edit text-primary mr-2" style="cursor:pointer; font-size:12px; padding:3px;" onclick="editAgendaEvent('${ev.id}')"></i>` : '';
+                    const trashHtml = canEdit ? `<i class="fas fa-trash text-danger" style="cursor:pointer; font-size:12px; padding:3px;" onclick="deleteAgendaEvent('${ev.id}', '${dateStr}')"></i>` : '';
+                    
+                    html += `
+                        <div class="event-item mb-2" style="background:#fff; border:1px solid #eee; border-left:3px solid ${color}; padding:10px; border-radius:6px; ${containerOpacity}">
+                            <div class="d-flex align-items-center">
+                                ${checkboxHtml}
+                                <div class="flex-grow-1">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <strong style="font-size:13px; ${titleStyle}">${stars} ${ev.title}</strong>
+                                        <div>${editHtml}${trashHtml}</div>
+                                    </div>
+                                    <div class="mt-1" style="${ev.completed ? 'opacity:0.5;' : ''}">
+                                        <span class="text-muted" style="font-size:12px;"><i class="far fa-clock"></i> ${timeStr} ${ev.isAdmin ? '(Yetkili Etkinliği)' : ''}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>`;
+                });
+            }
+            listEl.innerHTML = html;
+        };
+
+        window.toggleEventCompletion = function(id, dateStr) {
+            const eventIndex = agendaEvents.findIndex(e => e.id === id);
+            if(eventIndex !== -1) {
+                const ev = agendaEvents[eventIndex];
+                ev.completed = !ev.completed;
+                
+                const currentUsername = localStorage.getItem('portal_username') || 'testuser';
+                const saveKey = ev.isAdmin ? 'portal_agenda_events_admin' : getStorageKey();
+                const toSave = agendaEvents.filter(e => e.isAdmin === ev.isAdmin);
+                localStorage.setItem(saveKey, JSON.stringify(toSave));
+                
+                renderEventList(dateStr);
+                renderTodaysEvents();
+                let currentViewDate = calendar.getDate();
+                initCalendar(currentViewDate);
+            }
+        };
+
+        window.deleteAgendaEvent = function(id, dateStr) {
+            if(confirm("Bu planı silmek istiyor musunuz?")) {
+                const ev = agendaEvents.find(e => e.id === id);
+                agendaEvents = agendaEvents.filter(e => e.id !== id);
+                
+                const saveKey = ev.isAdmin ? 'portal_agenda_events_admin' : getStorageKey();
+                const toSave = agendaEvents.filter(e => e.isAdmin === ev.isAdmin);
+                localStorage.setItem(saveKey, JSON.stringify(toSave));
+                
+                renderEventList(dateStr);
+                renderTodaysEvents();
+                let currentViewDate = calendar.getDate();
+                initCalendar(currentViewDate);
+            }
+        };
+
+        window.toggleAgendaExtraEvents = function() {
+            window.agendaWidgetExpanded = !window.agendaWidgetExpanded;
+            renderTodaysEvents();
+        };
+
+        window.setAgendaSortMode = function(mode) {
+            localStorage.setItem('portal_agenda_sort_mode', mode);
+            renderTodaysEvents();
+        };
+
+        window.agendaDragStart = function(e, id) {
+            e.dataTransfer.setData('text/plain', id);
+            e.dataTransfer.effectAllowed = 'move';
+        };
+        
+        window.agendaDragOver = function(e) {
+            e.preventDefault();
+            e.currentTarget.style.borderTop = '2px solid #007bff';
+        };
+
+        window.agendaDragLeave = function(e) {
+            e.currentTarget.style.borderTop = '1px solid #f1f1f1';
+        };
+        
+        window.agendaDrop = function(e, targetId) {
+            e.preventDefault();
+            e.currentTarget.style.borderTop = '1px solid #f1f1f1';
+            const draggedId = e.dataTransfer.getData('text/plain');
+            if (!draggedId || draggedId === targetId) return;
+            
+            const targetDateStr = currentWidgetDateStr;
+            let dayEvents = agendaEvents.filter(ev => ev.date === targetDateStr);
+            
+            let sortMode = localStorage.getItem('portal_agenda_sort_mode') || 'time';
+            dayEvents.sort((a,b) => {
+                if (sortMode === 'time') {
+                    if (a.time && !b.time) return -1;
+                    if (!a.time && b.time) return 1;
+                    if (a.time && b.time) return a.time.localeCompare(b.time);
+                    return parseInt(b.importance || '3') - parseInt(a.importance || '3');
+                } else if (sortMode === 'importance') {
+                    if (a.isAdmin && !b.isAdmin) return -1;
+                    if (!a.isAdmin && b.isAdmin) return 1;
+                    return parseInt(b.importance || '3') - parseInt(a.importance || '3');
+                } else if (sortMode === 'manual') {
+                    return (a.customOrder || 0) - (b.customOrder || 0);
+                }
+                return 0;
+            });
+            
+            const draggedIdx = dayEvents.findIndex(ev => ev.id === draggedId);
+            const targetIdx = dayEvents.findIndex(ev => ev.id === targetId);
+            
+            if (draggedIdx > -1 && targetIdx > -1) {
+                const [draggedItem] = dayEvents.splice(draggedIdx, 1);
+                dayEvents.splice(targetIdx, 0, draggedItem);
+                
+                dayEvents.forEach((ev, index) => {
+                    ev.customOrder = index;
+                });
+                
+                const toSaveAdmin = agendaEvents.filter(ev => ev.isAdmin);
+                const toSaveUser = agendaEvents.filter(ev => !ev.isAdmin);
+                localStorage.setItem('portal_agenda_events_admin', JSON.stringify(toSaveAdmin));
+                localStorage.setItem(getStorageKey(), JSON.stringify(toSaveUser));
+                
+                localStorage.setItem('portal_agenda_sort_mode', 'manual');
+                renderTodaysEvents();
+            }
+        };
+
+        window.renderTodaysEvents = function() {
+            const widgetEl = document.getElementById('daily-events-widget');
+            if(!widgetEl) return;
+            
+            if(!currentWidgetDateStr) initWidgetDate();
+            const targetDateStr = currentWidgetDateStr;
+            
+            const parts = targetDateStr.split('-');
+            const dateObj = new Date(parts[0], parts[1]-1, parts[2]);
+            const titleDate = dateObj.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long' });
+            
+            const offset = new Date().getTimezoneOffset();
+            const localToday = new Date(new Date().getTime() - (offset*60*1000));
+            const todayStr = localToday.toISOString().split('T')[0];
+            
+            let titleText = `${titleDate} Etkinlikleri`;
+            if (targetDateStr === todayStr) {
+                titleText = `BUGÜNÜN ETKİNLİKLERİ (${titleDate})`;
+            }
+            const titleEl = document.getElementById('daily-events-title');
+            if(titleEl) titleEl.innerText = titleText.toUpperCase();
+            
+            let sortMode = localStorage.getItem('portal_agenda_sort_mode') || 'time';
+            const sortBtn = document.getElementById('agendaSortDropdown');
+            if (sortBtn) {
+                if (sortMode === 'time') sortBtn.innerText = 'Saate Göre';
+                else if (sortMode === 'importance') sortBtn.innerText = 'Öneme Göre';
+                else if (sortMode === 'manual') sortBtn.innerText = 'Özel Sıra';
+            }
+            
+            const todayEvents = agendaEvents.filter(e => e.date === targetDateStr);
+            todayEvents.sort((a,b) => {
+                if (sortMode === 'time') {
+                    if (a.time && !b.time) return -1;
+                    if (!a.time && b.time) return 1;
+                    if (a.time && b.time) return a.time.localeCompare(b.time);
+                    return parseInt(b.importance || '3') - parseInt(a.importance || '3');
+                } else if (sortMode === 'importance') {
+                    if (a.isAdmin && !b.isAdmin) return -1;
+                    if (!a.isAdmin && b.isAdmin) return 1;
+                    return parseInt(b.importance || '3') - parseInt(a.importance || '3');
+                } else if (sortMode === 'manual') {
+                    return (a.customOrder || 0) - (b.customOrder || 0);
+                }
+                return 0;
+            });
+            
+            if (todayEvents.length > 0) {
+                let eventsHtml = '';
+                if (typeof window.agendaWidgetExpanded === 'undefined') {
+                    window.agendaWidgetExpanded = false;
+                }
+                
+                todayEvents.forEach((ev, index) => {
+                    const timeStr = ev.time ? `${ev.time}` : 'Tüm Gün';
+                    const color = ev.isAdmin ? '#007bff' : IMPORTANCE_COLORS[ev.importance || '3'];
+                    const opacity = ev.completed ? '0.4' : '1';
+                    const textDeco = ev.completed ? 'line-through' : 'none';
+                    
+                    let mb = '2';
+                    if (index === todayEvents.length - 1) mb = '0';
+                    else if (index === 3 && !window.agendaWidgetExpanded && todayEvents.length > 4) mb = '0';
+                    
+                    if (index === 4) {
+                        const displayStyle = window.agendaWidgetExpanded ? 'block' : 'none';
+                        eventsHtml += `<div id="agenda-extra-events" style="display: ${displayStyle};">`;
+                    }
+                    
+                    eventsHtml += `
+                        <div draggable="true" ondragstart="agendaDragStart(event, '${ev.id}')" ondragover="agendaDragOver(event)" ondragleave="agendaDragLeave(event)" ondrop="agendaDrop(event, '${ev.id}')" class="d-flex align-items-center mb-${mb} p-2" style="cursor:grab; background:#fdfdfd; border:1px solid #f1f1f1; border-radius:6px; opacity: ${opacity}; transition:all 0.2s;">
+                            <div style="width:12px; height:12px; border-radius:50%; background-color:${color}; margin-right:12px; flex-shrink:0; box-shadow:0 1px 3px rgba(0,0,0,0.1);"></div>
+                            <div class="flex-grow-1" style="text-decoration: ${textDeco}; line-height: 1.2;">
+                                <div class="font-weight-bold" style="color: #333; font-size: 13px;">${ev.title}</div>
+                                ${ev.isAdmin ? '<div class="badge badge-primary mt-1" style="font-size:9px;">YETKİLİ</div>' : ''}
+                            </div>
+                            <div class="text-muted" style="font-size: 11px; font-weight:600; background:#f0f0f0; padding:4px 8px; border-radius:12px; pointer-events:none;">
+                                <i class="far fa-clock"></i> ${timeStr}
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                if (todayEvents.length > 4) {
+                    eventsHtml += `</div>`;
+                    
+                    const btnText = window.agendaWidgetExpanded ? 'Daha Az Gör <i class="fas fa-chevron-up" style="margin-left:4px;"></i>' : `Tümünü Gör (+${todayEvents.length - 4}) <i class="fas fa-chevron-down" style="margin-left:4px;"></i>`;
+                    eventsHtml += `
+                        <div class="text-center mt-2">
+                            <button onclick="toggleAgendaExtraEvents()" class="btn btn-sm" style="font-size: 11px; font-weight: 600; color: #666; background: #f8f9fa; border: 1px solid #e2e8f0; border-radius: 20px; padding: 4px 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.03); outline:none; transition: all 0.2s;">
+                                ${btnText}
+                            </button>
+                        </div>
+                    `;
+                }
+                
+                widgetEl.innerHTML = eventsHtml;
+            } else {
+                widgetEl.innerHTML = `
+                    <div style="border-radius: 8px; padding: 15px; background: #fafafa; text-align: center; color: #aaa; border: 1px dashed #e6e6e6;">
+                        <i class="far fa-calendar-times" style="font-size: 24px; margin-bottom: 8px; color:#ddd;"></i>
+                        <div style="font-size: 12px; font-weight: 500;">${titleDate} tarihi için etkinlik bulunmuyor.</div>
+                    </div>
+                `;
+            }
+        };
+    </script>
+    <script>
+// --- FAVORITES LOGIC ---
+        const defaultFavorites = ['BULUT', 'ULAKBEL', 'E-POSTA', 'EBYS İÇİŞLERİ', 'ARAÇ TAKİP SİSTEMİ', 'PERSONEL TAKİP'];
+        let favoritesList = [];
+        try {
+            let savedFavorites = localStorage.getItem('portal_favorites');
+            favoritesList = savedFavorites ? JSON.parse(savedFavorites) : defaultFavorites;
+        } catch (e) {
+            favoritesList = defaultFavorites;
+        }
+
+        function renderFavorites() {
+            const favoritesContainer = document.querySelector('.favorite-modules');
+            const allModulesContainer = document.getElementById('allModulesContent');
+            if(!favoritesContainer || !allModulesContainer) return;
+            
+            favoritesContainer.innerHTML = '';
+            const allCards = allModulesContainer.querySelectorAll('.module-card');
+            
+            allCards.forEach(card => {
+                const title = card.querySelector('strong').innerText.trim();
+                const starIcon = card.querySelector('.star-btn');
+                
+                if (favoritesList.includes(title)) {
+                    if(starIcon) {
+                        starIcon.classList.remove('far');
+                        starIcon.classList.add('fas');
+                    }
+                    const clone = card.closest('li').cloneNode(true);
+                    const cloneStar = clone.querySelector('.star-btn');
+                    if(cloneStar) {
+                        cloneStar.setAttribute('onclick', `event.stopPropagation(); toggleFav(this, '${title}');`);
+                    }
+                    favoritesContainer.appendChild(clone);
+                } else {
+                    if(starIcon) {
+                        starIcon.classList.remove('fas');
+                        starIcon.classList.add('far');
+                    }
+                }
+            });
+        }
+
+        window.toggleFav = function(element, title) {
+            if (favoritesList.includes(title)) {
+                favoritesList = favoritesList.filter(item => item !== title);
+            } else {
+                favoritesList.push(title);
+            }
+            localStorage.setItem('portal_favorites', JSON.stringify(favoritesList));
+            renderFavorites();
+        };
+
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            renderFavorites();
+            
+            const modullerToggle = document.getElementById('modullerToggle');
+            const allModulesContent = document.getElementById('allModulesContent');
+            
+            if(modullerToggle && allModulesContent) {
+                // Initialize based on checkbox state
+                if(!modullerToggle.checked) {
+                    allModulesContent.style.display = 'none';
+                }
+                
+                modullerToggle.addEventListener('change', function() {
+                    if(this.checked) {
+                        allModulesContent.style.display = 'block';
+                    } else {
+                        allModulesContent.style.display = 'none';
+                    }
+                });
+            }
+        });
+
+    </script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- DOĞUM GÜNÜ MANTIĞI (Dinamik Enjeksiyon) ---
+            const employeeName = localStorage.getItem('portal_username') || "Ahmet Bey";
+            
+            // --- SAHTE (MOCK) VERİTABANI ---
+            const today = new Date();
+            const currentMonthDay = String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
+            
+            const mockBirthdays = {
+                "personel1": currentMonthDay,
+                "ahmet": "10-15",
+                "mehmet": "01-01"
+            };
+            
+            const isBirthdayToday = (mockBirthdays[employeeName.toLowerCase()] === currentMonthDay);
+            const todayDateString = today.toISOString().split('T')[0];
+            const lastCelebrated = localStorage.getItem('portal_birthday_celebrated_2');
+
+            if (isBirthdayToday && lastCelebrated !== todayDateString) {
+                // Sayfa yüklendikten kısa bir süre sonra sürprizi patlat
+                setTimeout(() => {
+                    // Confetti Konfeti Animasyonu
+                    var duration = 4 * 1000;
+                    var animationEnd = Date.now() + duration;
+                    var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 999999 };
+
+                    function randomInRange(min, max) { return Math.random() * (max - min) + min; }
+
+                    var interval = setInterval(function() {
+                        var timeLeft = animationEnd - Date.now();
+                        if (timeLeft <= 0) return clearInterval(interval);
+                        var particleCount = 50 * (timeLeft / duration);
+                        
+                        confetti(Object.assign({}, defaults, { particleCount,
+                            origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }
+                        }));
+                        confetti(Object.assign({}, defaults, { particleCount,
+                            origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }
+                        }));
+                    }, 250);
+                    
+                    // Dinamik Olarak Saf HTML Pop-up Enjekte Et
+                    const existingOverlay = document.getElementById('customBirthdayOverlay');
+                    if (!existingOverlay) {
+                        const overlayHtml = `
+                        <div id="customBirthdayOverlay" style="display: flex; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.3); z-index: 2147483647; justify-content: center; align-items: center; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);">
+                            <div style="background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(244,246,249,0.95) 100%); border-radius: 20px; padding: 40px; text-align: center; max-width: 450px; width: 90%; box-shadow: 0 15px 35px rgba(0,0,0,0.2); animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); border: 1px solid rgba(255,255,255,0.5);">
+                                <style>
+                                @keyframes popIn {
+                                    0% { opacity: 0; transform: scale(0.8); }
+                                    100% { opacity: 1; transform: scale(1); }
+                                }
+                                </style>
+                                <div style="font-size: 65px; margin-bottom: 15px; line-height: 1;">🎂</div>
+                                <h2 style="color: #ff3366; font-family: 'Inter', sans-serif; font-weight: 800; margin-bottom: 15px;">İyi Ki Doğdun!</h2>
+                                <h4 style="color: #333; font-weight: 700; margin-bottom: 20px; font-size: 24px;">${employeeName.toUpperCase()}</h4>
+                                <p style="color: #666; font-size: 16px; margin-bottom: 30px; line-height: 1.5;">
+                                    Yeni yaşının sana sağlık, mutluluk ve başarı getirmesini dileriz.<br>
+                                    Seninle çalışmaktan gurur duyuyoruz! 🎉
+                                </p>
+                                <button onclick="document.getElementById('customBirthdayOverlay').style.display='none';" style="background: linear-gradient(45deg, #ff3366, #ff7b54); color: white; border: none; padding: 12px 35px; border-radius: 30px; font-weight: bold; font-size: 16px; box-shadow: 0 5px 15px rgba(255,51,102,0.4); cursor: pointer;">
+                                    Teşekkür Ederim
+                                </button>
+                            </div>
+                        </div>`;
+                        document.body.insertAdjacentHTML('beforeend', overlayHtml);
+                    } else {
+                        existingOverlay.style.display = 'flex';
+                    }
+                    
+                    // Bugünü tarayıcı hafızasına kaydet
+                    localStorage.setItem('portal_birthday_celebrated_2', todayDateString);
+                }, 800);
+            }
+        });
+    </script>
+</body>

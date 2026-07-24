@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="tr" dir="ltr">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Melikgazi Belediyesi - Portal Giriş</title>
+    <link rel="icon" href="https://portal.melikgazi.bel.tr/images/logo.png">
+    <meta name="robots" content="noindex">
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CRoboto:400,500%7CExo+2:600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            letter-spacing: -0.01em;
+            font-family: 'Inter', sans-serif;
+            font-size: .8125rem;
+            font-weight: 400;
+            line-height: 1.5;
+            color: #272c33;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .login-bg-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .login-card {
+            position: relative;
+            z-index: 1;
+            background: rgba(255, 255, 255, 0.96);
+            border-radius: 16px;
+            padding: 36px 40px 28px;
+            width: 400px;
+            max-width: 92vw;
+            text-align: center;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .login-logo {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+
+        .login-logo img {
+            width: 80px;
+            height: auto;
+            margin-bottom: 2px;
+        }
+
+        .logo-text-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            line-height: 1.15;
+        }
+
+        .logo-subtitle-top {
+            font-size: 6.5px;
+            color: #5bb8d4;
+            letter-spacing: 2px;
+            font-weight: 400;
+            text-transform: uppercase;
+        }
+
+        .logo-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #4ab4d0;
+            letter-spacing: 4px;
+            font-family: 'Exo 2', sans-serif;
+        }
+
+        .logo-subtitle {
+            font-size: 8px;
+            color: #5bb8d4;
+            letter-spacing: 5px;
+            font-weight: 400;
+            text-transform: uppercase;
+        }
+
+        .login-heading {
+            font-size: 16px;
+            font-weight: 600;
+            color: #303840;
+            margin-bottom: 14px;
+            margin-top: 8px;
+            letter-spacing: 0.5px;
+            font-family: 'Exo 2', 'Inter', sans-serif;
+        }
+
+        .login-description {
+            font-size: 12.5px;
+            color: #666;
+            line-height: 1.65;
+            margin-bottom: 24px;
+            text-align: center;
+            padding: 0 8px;
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .input-group {
+            margin-bottom: 16px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 10px 0;
+            border: none;
+            border-bottom: 1px solid #ddd;
+            font-size: 13px;
+            font-family: 'Inter', sans-serif;
+            color: #272c33;
+            background: transparent;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .input-group input:focus {
+            border-bottom-color: #5567ff;
+        }
+
+        .input-group input::placeholder {
+            color: #949595;
+            font-size: 13px;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 10px;
+            background: #5567ff;
+            color: white;
+            border: none;
+            border-radius: .25rem;
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 1px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            transition: background 0.3s;
+            margin-top: 6px;
+        }
+
+        .login-btn:hover {
+            background: #4455dd;
+        }
+
+        .login-version {
+            margin-top: 18px;
+            font-size: 12px;
+            color: #999;
+            font-weight: 500;
+        }
+    
+        /* Force Inter font on typography elements, leaving icons alone */
+        body, h1, h2, h3, h4, h5, h6, p, a, button, input, select, textarea, label, strong {
+            font-family: 'Inter', sans-serif !important;
+        }
+        /* Make sure it's crisp */
+        body {
+            -webkit-font-smoothing: antialiased !important;
+            -moz-osx-font-smoothing: grayscale !important;
+            letter-spacing: -0.01em;
+        }
+</style>
+</head>
+<body>
+    <div class="login-background">
+        <img src="login-bg.jpg" alt="Kayseri Kalesi" class="login-bg-img">
+    </div>
+
+    <div class="login-card">
+        <div class="login-logo">
+            <img src="https://portal.melikgazi.bel.tr/images/logo.png" alt="Melikgazi Logo">
+        </div>
+
+        <h1 class="login-heading">PORTAL GİRİŞ</h1>
+
+        <p class="login-description">
+            Melikgazi Belediyesi Portal uygulaması .
+            Kurum içerisinde kullanılan tüm dijital
+            projelere, listelere, ve kurum içi işlemlere
+            tek noktadan erişebilmeniz için
+            tasarlanmıştır. Portala girişte bilgisayar
+            kullanıcı adınız ve şifrenizi
+            kullanabilirsiniz.
+        </p>
+
+        <form class="login-form" onsubmit="handleLogin(event)">
+            <div class="input-group">
+                <input type="text" id="username" placeholder="Kullanıcı adınız" autocomplete="username">
+            </div>
+            <div class="input-group">
+                <input type="password" id="password" placeholder="Şifreniz" autocomplete="current-password">
+            </div>
+            <div id="login-error" style="color: #dc3545; font-size: 13px; font-weight: 500; margin-bottom: 12px; display: none;">Kullanıcı adı veya şifre hatalı!</div>
+            <button type="submit" class="login-btn">GİRİŞ</button>
+            <div style="font-size: 11.5px; color: #888; margin-top: 16px; margin-bottom: -5px; line-height: 1.5;">
+                <b style="color: #555;">Test İçin Giriş Bilgileri:</b><br>
+                Yetkili: <b style="color: #333;">admin</b> / 123<br>
+                Personel 1: <b style="color: #333;">personel1</b> / 123<br>
+                Personel 2: <b style="color: #333;">personel2</b> / 123
+            </div>
+        </form>
+
+        <div class="login-version">v3.0</div>
+    </div>
+
+    <script>
+        function handleLogin(e) {
+            e.preventDefault();
+            const user = document.getElementById('username').value.trim().toLowerCase();
+            const pass = document.getElementById('password').value.trim();
+            const errorDiv = document.getElementById('login-error');
+            
+            if (user === 'admin' && pass === '123') {
+                localStorage.setItem('portal_user_role', 'admin');
+                localStorage.setItem('portal_username', user);
+                window.location.href = 'dashboard.html';
+            } else if ((user === 'personel1' || user === 'personel2') && pass === '123') {
+                localStorage.setItem('portal_user_role', 'personnel');
+                localStorage.setItem('portal_username', user);
+                window.location.href = 'dashboard.html';
+            } else {
+                errorDiv.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>
