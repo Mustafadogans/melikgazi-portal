@@ -2,6 +2,8 @@
 
 Melikgazi Belediyesi personeli ve idari birimleri için geliştirilmiş, modern, hızlı ve duyarlı (responsive) kurumsal intranet portalı ve yönetim paneli arayüzü.
 
+🌐 **Canlı Önizleme / Demo:** [mustafadogans.github.io/melikgazi-portal](https://mustafadogans.github.io/melikgazi-portal/)
+
 ---
 
 ## 🌟 Proje Özellikleri
