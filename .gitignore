@@ -1,0 +1,23 @@
+# Large files & archives
+*.rar
+*.zip
+*.7z
+*.tar.gz
+*.exe
+
+# Exclude unneeded media / discord installer
+images/Moduller/Yeni klasör/
+images/Moduller/Yeni klasör.rar
+
+# Temporary & backup files
+*.bak
+temp_*
+index_output.html
+
+# IDE & OS files
+.vs/
+.vscode/
+.idea/
+Thumbs.db
+Desktop.ini
+.DS_Store

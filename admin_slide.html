@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <script src="assets/js/auth.js"></script>
+    <script>checkAdminRole();</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Melikgazi - Slide Yönetimi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/dashboard_glass.css" id="global-glass-theme">
+</head>
+<body>
+
+    <div id="navbar-container"></div>
+
+      <div id="sidebar-container"></div>
+
+      <div class="content-area" id="contentArea">
+        <a href="dashboard.html" class="btn-back-dashboard"><i class="fas fa-arrow-left"></i> Ana Menüye Dön</a>
+        <div class="page-title">SLIDE</div>
+        
+        <div id="listView">
+            <button class="btn btn-ekle" onclick="showForm()">EKLE</button>
+            
+            <div class="filter-card">
+                <div class="filter-group">
+                    <label>Aktif Pasif</label>
+                    <select><option>Tümü</option></select>
+                </div>
+                <div class="filter-group">
+                    <label>Durum</label>
+                    <select><option>Tümü</option></select>
+                </div>
+                <div class="filter-group">
+                    <label>Ekleyen</label>
+                    <select><option>Tümü</option></select>
+                </div>
+                <div>
+                    <button class="btn btn-reset">SIFIRLA</button>
+                    <button class="btn btn-filter">FİLTRELE</button>
+                </div>
+            </div>
+
+            <div class="data-card">
+                <div class="data-count">Listelenen <strong id="listCount">0</strong></div>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>EKLEYEN <i class="fas fa-sort"></i></th>
+                                <th>AKTİF Mİ? <i class="fas fa-sort"></i></th>
+                                <th>SİLİNDİ Mİ? <i class="fas fa-sort"></i></th>
+                                <th>KAYIT TARİH <i class="fas fa-sort"></i></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="listTableBody">
+                            <!-- Data -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="formView" style="display:none;">
+            <div class="card p-4">
+                <h5>Slide Ekle</h5>
+                <hr>
+                <div class="form-group">
+                    <label>Resim Dosyası</label>
+                    <input type="file" class="form-control" id="f_image">
+                </div>
+                <div class="form-group">
+                    <label>Bağlantı Linki</label>
+                    <input type="text" class="form-control" id="f_link" placeholder="Tıklandığında gidilecek URL">
+                </div>
+                <div class="form-group form-check">
+                    <input type="checkbox" class="form-check-input" id="f_aktif" checked>
+                    <label class="form-check-label">Aktif</label>
+                </div>
+                <button class="btn btn-primary" onclick="saveData()">Kaydet</button>
+                <button class="btn btn-secondary" onclick="hideForm()">İptal</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        
+
+
+
+        let slideData = [];
+        let currentEditId = null;
+
+        function loadData() {
+            try {
+                slideData = JSON.parse(localStorage.getItem('portal_admin_slide')) || [];
+            } catch(e) {
+                slideData = [];
+            }
+            if (slideData.length === 0) {
+                // Mock Data
+                slideData = [
+                    { id: 1, ekleyen: 'Muzaffer ME. ELGUN', aktif: true, silindi: false, tarih: '17.12.2021 15:51:17' },
+                    { id: 2, ekleyen: 'Muzaffer ME. ELGUN', aktif: true, silindi: false, tarih: '17.12.2021 15:51:06' },
+                    { id: 3, ekleyen: 'arge test', aktif: false, silindi: false, tarih: '7.10.2021 17:06:29' }
+                ];
+                localStorage.setItem('portal_admin_slide', JSON.stringify(slideData));
+            }
+            renderTable();
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('listTableBody');
+            tbody.innerHTML = '';
+            document.getElementById('listCount').innerText = slideData.length;
+
+            slideData.forEach(item => {
+                const aktifClass = item.aktif ? 'status-active' : 'status-passive';
+                const aktifText = item.aktif ? 'Aktif' : 'Pasif';
+                const silindiClass = item.silindi ? 'status-passive' : 'status-active';
+                const silindiText = item.silindi ? 'Pasif' : 'Aktif';
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${item.ekleyen}</td>
+                        <td><span class="${aktifClass}">${aktifText}</span><span class="status-line"></span></td>
+                        <td><span class="${silindiClass}">${silindiText}</span><span class="status-line"></span></td>
+                        <td>${item.tarih}</td>
+                        <td><i class="fas fa-ellipsis-v text-muted" style="cursor:pointer;" onclick="deleteItem(${item.id})"></i></td>
+                    </tr>
+                `;
+            });
+        }
+
+        function showForm() {
+            document.getElementById('listView').style.display = 'none';
+            document.getElementById('formView').style.display = 'block';
+        }
+
+        function hideForm() {
+            document.getElementById('formView').style.display = 'none';
+            document.getElementById('listView').style.display = 'block';
+        }
+
+        
+        function editItem(id) {
+            let item = slideData.find(i => i.id === id);
+            if(item) {
+                currentEditId = id;
+                if(document.getElementById('f_link')) document.getElementById('f_link').value = item.link || '';
+                document.getElementById('f_aktif').checked = item.aktif;
+                const btn = document.querySelector('#formView .btn-primary');
+                if(btn) btn.innerText = 'Güncelle';
+                showForm();
+            }
+        }
+        function saveData() {
+            const aktif = document.getElementById('f_aktif').checked;
+            const link = document.getElementById('f_link') ? document.getElementById('f_link').value : '';
+            
+            if(currentEditId) {
+                let item = slideData.find(i => i.id === currentEditId);
+                if(item) {
+                    item.aktif = aktif;
+                    item.link = link;
+                }
+                currentEditId = null;
+            } else {
+                slideData.unshift({
+                    id: Date.now(),
+                    ekleyen: currentUsername,
+                    aktif: aktif,
+                    resim: "https://picsum.photos/1920/1080?random=" + Date.now(),
+                    link: link,
+                    silindi: false,
+                    tarih: new Date().toLocaleString('tr-TR')
+                });
+            }
+            localStorage.setItem('portal_admin_slide', JSON.stringify(slideData));
+            const btn = document.querySelector('#formView .btn-primary');
+            if(btn) btn.innerText = 'Kaydet';
+            hideForm();
+            renderTable();
+        }
+
+
+        function deleteItem(id) {
+            if(confirm('Silmek istediğinize emin misiniz?')) {
+                slideData = slideData.filter(i => i.id !== id);
+                localStorage.setItem('portal_admin_slide', JSON.stringify(slideData));
+                renderTable();
+            }
+        }
+
+        loadData();
+    </script>
+    <script src="assets/js/components.js"></script>
+</body>
+</html>

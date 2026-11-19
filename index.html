@@ -197,7 +197,7 @@
 </head>
 <body>
     <div class="login-background">
-        <img src="login-bg.jpg" alt="Kayseri Kalesi" class="login-bg-img">
+        <img src="images/login-bg.jpg" alt="Kayseri Kalesi" class="login-bg-img">
     </div>
 
     <div class="login-card">
@@ -240,22 +240,73 @@
     <script>
         function handleLogin(e) {
             e.preventDefault();
-            const user = document.getElementById('username').value.trim().toLowerCase();
+            const user = document.getElementById('username').value.trim();
             const pass = document.getElementById('password').value.trim();
             const errorDiv = document.getElementById('login-error');
-            
+            errorDiv.style.display = 'none';
+
             if (user === 'admin' && pass === '123') {
                 localStorage.setItem('portal_user_role', 'admin');
-                localStorage.setItem('portal_username', user);
+                localStorage.setItem('portal_username', 'Süper Admin');
                 window.location.href = 'dashboard.html';
             } else if ((user === 'personel1' || user === 'personel2') && pass === '123') {
                 localStorage.setItem('portal_user_role', 'personnel');
-                localStorage.setItem('portal_username', user);
+                localStorage.setItem('portal_username', user.toUpperCase());
                 window.location.href = 'dashboard.html';
             } else {
+                errorDiv.innerText = 'Kullanıcı adı veya şifre hatalı!';
                 errorDiv.style.display = 'block';
             }
         }
     </script>
+
+    <!-- Dinamik Slayt ve Yazi Yukleme -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Giris Yazisi Yukleme
+            try {
+                let yazilar = JSON.parse(localStorage.getItem('portal_admin_giris_yazisi')) || [];
+                let aktifYazi = yazilar.find(y => y.aktif);
+                if(aktifYazi) {
+                    const descEl = document.querySelector('.login-description');
+                    if(descEl) descEl.innerText = aktifYazi.aciklama;
+                }
+            } catch(e) {}
+
+            // Slayt Yukleme
+            try {
+                let slaytlar = JSON.parse(localStorage.getItem('portal_admin_slide')) || [];
+                let aktifSlaytlar = slaytlar.filter(s => s.aktif);
+                
+                if(aktifSlaytlar.length > 0) {
+                    const bgImg = document.querySelector('.login-bg-img');
+                    if(bgImg) {
+                        let currentIdx = 0;
+                        // Slayt Gecis Efekti icin CSS ekle
+                        bgImg.style.transition = 'opacity 1s ease-in-out';
+                        
+                        function changeSlide() {
+                            bgImg.style.opacity = 0;
+                            setTimeout(() => {
+                                bgImg.src = aktifSlaytlar[currentIdx].resim; // .resim url tutuyor varsayimi
+                                bgImg.style.opacity = 1;
+                                currentIdx = (currentIdx + 1) % aktifSlaytlar.length;
+                            }, 1000);
+                        }
+                        
+                        // Ilk slayti hemen yukle (sayfa yuklenince)
+                        bgImg.src = aktifSlaytlar[0].resim;
+                        
+                        // Eger 1'den fazla slayt varsa timer baslat
+                        if(aktifSlaytlar.length > 1) {
+                            currentIdx = 1;
+                            setInterval(changeSlide, 6000);
+                        }
+                    }
+                }
+            } catch(e) {}
+        });
+    </script>
+
 </body>
 </html>
